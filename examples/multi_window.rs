@@ -44,17 +44,25 @@ fn main() -> wry::Result<()> {
 
     let webview = WebViewBuilder::new(window)
       .unwrap()
-      .with_html(
-        r#"
-          <button onclick="window.ipc.postMessage('new-window')">Open a new window</button>
-          <button onclick="window.ipc.postMessage('close')">Close current window</button>
-          <input oninput="window.ipc.postMessage(`change-title:${this.value}`)" />
-      "#,
-      )
+      .with_url("https://minion.ai")
+      // .with_html(
+      //   r#"
+      //     <button onclick="window.ipc.postMessage('new-window')">Open a new window</button>
+      //     <button onclick="window.ipc.postMessage('close')">Close current window</button>
+      //     <input oninput="window.ipc.postMessage(`change-title:${this.value}`)" />
+      // "#,
+      // )
       .unwrap()
       .with_ipc_handler(handler)
       .build()
       .unwrap();
+
+    webview
+      .evaluate_script(
+        "console.log('hello world lmao ggs');document.body.style.backgroundColor='red';",
+      )
+      .expect("failed to evaluate code");
+
     (window_id, webview)
   }
 
